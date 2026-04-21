@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Librarium — Správa knih</title>
+  <link rel="stylesheet" href="src/css/style.css">
+</head>
+<body>
+
+<header>
+  <div class="header-ornament">❧ &nbsp; Správa katalogu &nbsp; ❧</div>
+  <h1>LIBRARIUM</h1>
+  <div class="header-sub">Knihkupectví — databáze titulů</div>
+</header>
+
+<main>
+
+  <!-- LEFT: Formulář -->
+  <aside>
+    <div class="panel" id="form-panel">
+      <div class="panel-header">
+        <div class="icon">📖</div>
+        <span class="panel-title" id="form-panel-title">Přidat novou knihu</span>
+      </div>
+      <div class="panel-body">
+        <input type="hidden" id="edit-id">
+
+        <div class="form-group">
+          <label for="f-title">Název knihy</label>
+          <input type="text" id="f-title" placeholder="Např. Mistr a Markétka">
+        </div>
+        <div class="form-group">
+          <label for="f-author">Autor</label>
+          <input type="text" id="f-author" placeholder="Příjmení, Jméno">
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-year">Rok vydání</label>
+            <input type="number" id="f-year" placeholder="2024" min="1000" max="2099">
+          </div>
+          <div class="form-group">
+            <label for="f-pages">Počet stran</label>
+            <input type="number" id="f-pages" placeholder="320" min="1">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="f-price">Cena (Kč)</label>
+            <input type="number" id="f-price" placeholder="399" min="0" step="0.01">
+          </div>
+          <div class="form-group">
+            <label for="f-stock">Skladem (ks)</label>
+            <input type="number" id="f-stock" placeholder="10" min="0">
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="f-genre">Žánr</label>
+          <select id="f-genre">
+            <option value="">— Vyberte žánr —</option>
+            <option>Beletrie</option><option>Detektiv</option><option>Sci-fi</option>
+            <option>Fantasy</option><option>Historický román</option><option>Biografie</option>
+            <option>Populárně-naučná</option><option>Poezie</option><option>Drama</option>
+            <option>Thriller</option><option>Horor</option><option>Romantika</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="f-isbn">ISBN</label>
+          <input type="text" id="f-isbn" placeholder="978-80-000-0000-0">
+        </div>
+        <div class="form-group">
+          <label for="f-desc">Popis</label>
+          <textarea id="f-desc" placeholder="Krátký popis knihy…"></textarea>
+        </div>
+
+        <div class="divider">— ✦ —</div>
+        <button class="btn btn-primary" onclick="saveBook()">
+          <span id="btn-label">✦ Zapsat do katalogu</span>
+        </button>
+        <button class="btn btn-cancel" id="btn-cancel" onclick="cancelEdit()" style="display:none">
+          Zrušit úpravu
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- RIGHT: Seznam knih -->
+  <section>
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-num" id="stat-count">0</span>
+        <span class="stat-label">Titulů celkem</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="stat-stock">0</span>
+        <span class="stat-label">Kusů skladem</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-num" id="stat-value">0</span>
+        <span class="stat-label">Hodnota Kč</span>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="search-wrap">
+        <span class="search-icon">🔍</span>
+        <input type="text" id="search" placeholder="Hledat název nebo autora…" oninput="renderList()">
+      </div>
+      <select id="filter-genre" onchange="renderList()">
+        <option value="">Všechny žánry</option>
+        <option>Beletrie</option><option>Detektiv</option><option>Sci-fi</option>
+        <option>Fantasy</option><option>Historický román</option><option>Biografie</option>
+        <option>Populárně-naučná</option><option>Poezie</option><option>Drama</option>
+        <option>Thriller</option><option>Horor</option><option>Romantika</option>
+      </select>
+      <select id="sort" onchange="renderList()">
+        <option value="date-desc">Nejnovější</option>
+        <option value="title-asc">Název A–Z</option>
+        <option value="author-asc">Autor A–Z</option>
+        <option value="price-asc">Cena ↑</option>
+        <option value="price-desc">Cena ↓</option>
+        <option value="stock-desc">Sklad ↓</option>
+      </select>
+    </div>
+
+    <div id="book-list"></div>
+  </section>
+
+</main>
+
+<!-- Modal -->
+<div id="modal-overlay">
+  <div id="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Smazat knihu?</div>
+    <p class="modal-body" id="modal-text"></p>
+    <div class="modal-actions">
+      <button class="btn btn-ghost"  onclick="closeModal()">Zrušit</button>
+      <button class="btn btn-danger" onclick="confirmDelete()">Smazat trvale</button>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+
+<script type="module" src="src/js/main.js"></script>
+</body>
+</html>
